@@ -2,7 +2,7 @@
 """DOCS"""
 import requests
 
-def number_of_subscribers(subreddit):
+def top_ten(subreddit):
     """Docs"""
     reddit_url = "https://www.reddit.com/r/{}/hot.json" \
         .format(subreddit)
