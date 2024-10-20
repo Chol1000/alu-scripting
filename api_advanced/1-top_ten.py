@@ -1,26 +1,26 @@
 #!/usr/bin/python3
-"""
- A function that queries the Reddit API and prints the titles.
-"""
+"""Prints the title of the first 10 hot posts listed for a given subreddit"""
 
 import requests
 
 
 def top_ten(subreddit):
-    """Prints the top ten hot posts for a given subreddit"""
+    """Main function"""
+    URL = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
 
-    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
+    HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
+    RESPONSE = requests.get(URL, headers=HEADERS, allow_redirects=False)
+    
+    # Check if the subreddit exists
+    if RESPONSE.status_code == 404:
+        print(None)
+        return
+    elif RESPONSE.status_code != 200:
         print(None)
         return
 
-    data = response.json().get("data")
-    if data is None or len(data.get("children")) == 0:
-        print(None)
-        return
+    # Parse the JSON response and print hot post titles
+    HOT_POSTS = RESPONSE.json().get("data", {}).get("children", [])
+    for post in HOT_POSTS:
+        print(post.get('data').get('title'))
 
-    for child in data.get("children"):
-        print(child.get("data").get("title"))
